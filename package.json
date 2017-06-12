@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "cognitive-services": "^0.1.2",
     "microsoft-computer-vision": "^0.2.6"
   },
   "devDependencies": {},

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analyze an Image Sample</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+    function analyzeImage() {
+        var url = document.getElementById("urlInput").value
+            console.log('URL:', url)
+        var params = {
+            // Request parameters
+            "visualFeatures": "Categories,Description,Color,Adult,Faces",
+            "language": "en",
+        };
+
+        $.ajax({
+            // NOTE: You must use the same location in your REST call as you used to obtain your subscription keys.
+            //   For example, if you obtained your subscription keys from westus, replace "westcentralus" in the 
+            //   URL below with "westus".
+            url: "https://eastus2.api.cognitive.microsoft.com/vision/v1.0/analyze?" + $.param(params),
+
+            beforeSend: function(xhrObj){
+                // Request headers
+                xhrObj.setRequestHeader("Content-Type","application/json");
+
+                // NOTE: Replace the "Ocp-Apim-Subscription-Key" value with a valid subscription key.
+                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "2c1fd5fba8444e2497ec513e01464af3");
+            },
+
+            type: "POST",
+
+            // Request body
+            data: '{"url": "'+ url  +'"}'
+        })
+
+        .done(function(data) {
+            // Show formatted JSON on webpage.
+            $("#responseTextArea").val(JSON.stringify(data, null, 2));
+            console.log(data)
+        })
+
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            // Display error message.
+            var errorString = (errorThrown === "") ? "Error. " : errorThrown + " (" + jqXHR.status + "): ";
+            errorString += (jqXHR.responseText === "") ? "" : jQuery.parseJSON(jqXHR.responseText).message;
+            alert(errorString);
+        });
+    };
+</script>
+
+<form action="">
+    <label for="">Url:</label>
+    <input id="urlInput" type="text">
+    <input type="button" value="Go" onclick="analyzeImage()">
+</form>
+REST response:
+<br><br>
+<textarea id="responseTextArea" class="UIInput" cols="120" rows="32"></textarea>
+</body>
+</html>
